@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#141c20">
+  <meta name="description" content="重なる領域を回し、16枚の位置と向きを揃える。群の構造から生まれた回転パズル、KASANE。">
+  <title>KASANE — 重なりをほどくパズル</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="KASANE ホーム"><span class="brand-mark" aria-hidden="true"></span>KASANE<span class="brand-ja">かさね</span></a>
+    <button class="text-button" id="help-open">遊び方・完成形 <span aria-hidden="true">↗</span></button>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="title">
+      <p class="eyebrow">A PUZZLE OF OVERLAPPING TURNS</p>
+      <h1 id="title">重なりを、<br>ほどく。</h1>
+      <p class="lead">ひとつ回すと、ほかも動く。<br>16枚の位置と向きを揃える、<br>小さくて深い回転パズル。</p>
+      <div class="target-note"><span class="tiny-colors" aria-hidden="true"><i></i><i></i><i></i><i></i></span><p>上から青・桃・黄・緑。<br>各段を 1 → 4、印をすべて上へ。</p></div>
+      <p class="desktop-hint">急がず、ひと回しずつ。</p>
+    </section>
+    <section class="puzzle" aria-label="KASANE パズル">
+      <div class="board-meta"><span id="status" role="status" aria-live="polite">盤面を準備しています</span><span class="moves"><strong id="move-count">0</strong> 手</span></div>
+      <div class="board-frame"><div id="board" class="board" role="group" aria-label="4行4列のパズル盤面"></div><div id="region-outline" class="region-outline" aria-hidden="true"><span>A</span></div></div>
+      <div class="region-caption"><span>01 <span>回す領域を選ぶ</span></span><span id="selected-name">A · 左上の3×3</span></div>
+      <div id="region-controls" class="region-controls" role="group" aria-label="回す3×3領域">
+        <button data-region="0" aria-label="A 左上の3×3" aria-pressed="true"><span class="region-icon" data-corner="0" aria-hidden="true"></span>A <span>左上</span></button>
+        <button data-region="1" aria-label="B 右上の3×3" aria-pressed="false"><span class="region-icon" data-corner="1" aria-hidden="true"></span>B <span>右上</span></button>
+        <button data-region="2" aria-label="C 左下の3×3" aria-pressed="false"><span class="region-icon" data-corner="2" aria-hidden="true"></span>C <span>左下</span></button>
+        <button data-region="3" aria-label="D 右下の3×3" aria-pressed="false"><span class="region-icon" data-corner="3" aria-hidden="true"></span>D <span>右下</span></button>
+      </div>
+      <div class="turn-controls" role="group" aria-label="選んだ領域を90度回す">
+        <button id="turn-left" aria-label="選んだ領域を左に90度回す"><span aria-hidden="true">↶</span> 左に回す</button>
+        <button id="turn-right" aria-label="選んだ領域を右に90度回す"><span aria-hidden="true">↷</span> 右に回す</button>
+      </div>
+      <div class="secondary-controls"><button id="undo" class="text-button" disabled><span aria-hidden="true">↶</span> 1手戻す</button><button id="scramble" class="text-button">混ぜなおす <span aria-hidden="true">⤨</span></button></div>
+      <p id="save-note" class="save-note">このブラウザに進行状況を自動保存</p>
+    </section>
+  </main>
+  <footer><span>FOUR TURNS. ONE HARMONY.</span><span class="keyboard-hint">A–D 領域選択 <span>← → 回転</span> Z 戻す</span></footer>
+  <dialog id="help-dialog" aria-labelledby="help-title">
+    <button class="dialog-close" id="help-close" aria-label="遊び方を閉じる">×</button>
+    <p class="eyebrow">HOW TO PLAY</p><h2 id="help-title">回して、元の秩序へ。</h2>
+    <div id="goal-board" class="goal-board" role="img" aria-label="完成形。上から青の丸、桃の三角、黄のひし形、緑の四角。各行は左から1、2、3、4。すべての印が上向き。"></div>
+    <ol><li><strong>A〜Dから領域を選ぶ。</strong><br>白枠で囲まれた3×3の9枚が対象です。</li><li><strong>左右どちらかに90度回す。</strong><br>9枚の位置と印の向きが一緒に変わります。中央の1枚は、その場で向きだけが変わります。</li><li><strong>16枚すべてを完成形に揃える。</strong><br>上から青・桃・黄・緑。各行は1〜4、印は上向き。色は記号でも見分けられます。</li></ol>
+    <p class="help-tip">揃えた部分を残すには？<br>「回す → 別の領域を回す → 最初を戻す」を試して、残る変化を観察してみてください。</p>
+    <p class="help-small">最初の盤面は自動で混ざります。すべて正規の回転から作るので、必ず解けます。</p>
+    <button class="primary-button" id="help-done">パズルに戻る</button>
+  </dialog>
+  <dialog id="scramble-dialog" aria-labelledby="scramble-title"><p class="eyebrow">A FRESH START</p><h2 id="scramble-title">新しく混ぜなおす？</h2><p>今の盤面と手順はリセットされます。</p><div class="dialog-actions"><button id="scramble-cancel">続ける</button><button id="scramble-confirm" class="primary-button">混ぜなおす</button></div></dialog>
+  <noscript><p class="noscript">このパズルを遊ぶにはJavaScriptを有効にしてください。</p></noscript>
+</body>
+</html>
